@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  myapp:
+    build: 
+      context: .
+      dockerfile: multi-stage.dockerfile
+    environment:
+      - PING_LISTEN_PORT=25565
+    expose:
+      - 25565
+    restart: always
+    deploy: 
+      replicas: 4
+    networks:
+      - app_net 
+
+  reverse-proxy:
+    image: "nginx:latest"
+    ports:
+      - "80:8080"
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    driver: bridge
+    
